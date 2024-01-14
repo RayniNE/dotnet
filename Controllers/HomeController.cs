@@ -5,16 +5,15 @@ namespace LanguageFeatures.Controllers;
 
 public class HomeController : Controller
 {
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
+        List<string> output = new();
+        await foreach (long? len in MyAsyncMethods.GetPageLengths(output, "apress.com", "microsoft.com", "amazon.com"))
+        {
+            output.Add($"Page length: {len}");
+        }
 
-        IProductSelection cart = new ShoppingCart(
-            new Product { Name = "Kayak", Price = 275M },
-            new Product { Name = "Lifejacket", Price = 48.95M },
-            new Product { Name = "Soccer ball", Price = 19.50M },
-            new Product { Name = "Corner flag", Price = 34.95M }
-        );
 
-        return View(cart.Names);
+        return View(output);
     }
 }
